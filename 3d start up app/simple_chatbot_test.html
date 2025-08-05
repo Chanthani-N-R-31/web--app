@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chatbot Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .chatbot-toggle:hover {
+            background: #2c3e50;
+            transform: scale(1.1);
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chatbot-window.active {
+            display: flex;
+        }
+
+        .chatbot-header {
+            background: #3498db;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user-message {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .bot-message .message-content {
+            background: white;
+            color: #2c3e50;
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message .message-content {
+            background: #3498db;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chatbot-input {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .chatbot-input input:focus {
+            border-color: #3498db;
+        }
+
+        .chatbot-send-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-send-btn:hover {
+            background: #2c3e50;
+        }
+        
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Simple Chatbot Test</h1>
+        <p>This is a simplified test to check if the chatbot functionality works.</p>
+        
+        <div id="status" class="status">Checking server connection...</div>
+        
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Make sure the Flask server is running: <code>python app_simple.py</code></li>
+            <li>Click the blue chat icon in the bottom-right corner</li>
+            <li>Try sending a message</li>
+            <li>Test error detection by typing: "SyntaxError: invalid syntax"</li>
+        </ol>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <div id="chatbot-toggle" class="chatbot-toggle">
+            💬
+        </div>
+        <div id="chatbot-window" class="chatbot-window">
+            <div class="chatbot-header">
+                <h3>🤖 Python Assistant</h3>
+                <button id="chatbot-close" class="chatbot-close">
+                    ×
+                </button>
+            </div>
+            <div id="chatbot-messages" class="chatbot-messages">
+                <div class="message bot-message">
+                    <div class="message-content">
+                        Hello! I'm your Python learning assistant. Ask me anything about programming or paste error messages for help!
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input-field" placeholder="Ask me about Python...">
+                <button id="chatbot-send" class="chatbot-send-btn">
+                    ➤
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple chatbot implementation
+        class SimpleChatbot {
+            constructor() {
+                console.log('SimpleChatbot initializing...');
+                this.isOpen = false;
+                this.isTyping = false;
+                
+                this.initializeElements();
+                this.initializeEventListeners();
+                this.checkServerConnection();
+            }
+            
+            initializeElements() {
+                this.toggle = document.getElementById('chatbot-toggle');
+                this.window = document.getElementById('chatbot-window');
+                this.close = document.getElementById('chatbot-close');
+                this.messages = document.getElementById('chatbot-messages');
+                this.input = document.getElementById('chatbot-input-field');
+                this.send = document.getElementById('chatbot-send');
+                
+                console.log('Elements initialized:', {
+                    toggle: !!this.toggle,
+                    window: !!this.window,
+                    close: !!this.close,
+                    messages: !!this.messages,
+                    input: !!this.input,
+                    send: !!this.send
+                });
+            }
+            
+            initializeEventListeners() {
+                if (this.toggle) {
+                    this.toggle.addEventListener('click', () => this.toggleChatbot());
+                }
+                
+                if (this.close) {
+                    this.close.addEventListener('click', () => this.closeChatbot());
+                }
+                
+                if (this.send) {
+                    this.send.addEventListener('click', () => this.sendMessage());
+                }
+                
+                if (this.input) {
+                    this.input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            this.sendMessage();
+                        }
+                    });
+                }
+                
+                console.log('Event listeners initialized');
+            }
+            
+            async checkServerConnection() {
+                const statusDiv = document.getElementById('status');
+                try {
+                    const response = await fetch('http://localhost:5000/api/health');
+                    if (response.ok) {
+                        statusDiv.textContent = '✅ Server is running! Chatbot should work.';
+                        statusDiv.className = 'status success';
+                    } else {
+                        statusDiv.textContent = '❌ Server responded with error. Check if Flask is running.';
+                        statusDiv.className = 'status error';
+                    }
+                } catch (error) {
+                    statusDiv.textContent = '❌ Cannot connect to server. Make sure Flask is running on port 5000.';
+                    statusDiv.className = 'status error';
+                }
+            }
+            
+            toggleChatbot() {
+                console.log('Toggle chatbot clicked');
+                this.isOpen = !this.isOpen;
+                
+                if (this.isOpen) {
+                    this.window.classList.add('active');
+                    this.input.focus();
+                    this.toggle.textContent = '×';
+                } else {
+                    this.window.classList.remove('active');
+                    this.toggle.textContent = '💬';
+                }
+            }
+            
+            closeChatbot() {
+                console.log('Close chatbot clicked');
+                this.isOpen = false;
+                this.window.classList.remove('active');
+                this.toggle.textContent = '💬';
+            }
+            
+            async sendMessage() {
+                const message = this.input.value.trim();
+                if (!message || this.isTyping) return;
+                
+                console.log('Sending message:', message);
+                
+                // Add user message
+                this.addMessage(message, 'user');
+                this.input.value = '';
+                
+                // Show typing indicator
+                this.isTyping = true;
+                this.addTypingIndicator();
+                
+                try {
+                    const response = await fetch('http://localhost:5000/api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message: message })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    // Remove typing indicator
+                    this.removeTypingIndicator();
+                    this.isTyping = false;
+                    
+                    if (data.success) {
+                        this.addMessage(data.response.message, 'bot');
+                    } else {
+                        this.addMessage(`Error: ${data.error}`, 'bot');
+                    }
+                    
+                } catch (error) {
+                    console.error('Chat error:', error);
+                    this.removeTypingIndicator();
+                    this.isTyping = false;
+                    this.addMessage(`Connection error: ${error.message}`, 'bot');
+                }
+            }
+            
+            addMessage(content, type) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${type}-message`;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.innerHTML = content.replace(/\n/g, '<br>');
+                
+                messageDiv.appendChild(contentDiv);
+                this.messages.appendChild(messageDiv);
+                
+                this.scrollToBottom();
+            }
+            
+            addTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message bot-message typing-indicator';
+                typingDiv.innerHTML = '<div class="message-content">Typing...</div>';
+                this.messages.appendChild(typingDiv);
+                this.scrollToBottom();
+            }
+            
+            removeTypingIndicator() {
+                const typing = this.messages.querySelector('.typing-indicator');
+                if (typing) {
+                    typing.remove();
+                }
+            }
+            
+            scrollToBottom() {
+                this.messages.scrollTop = this.messages.scrollHeight;
+            }
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing chatbot...');
+            window.chatbot = new SimpleChatbot();
+        });
+    </script>
+</body>
+</html>

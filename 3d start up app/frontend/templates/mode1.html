@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Mode 1 - Problem to Code{% endblock %}
+
+{% block content %}
+<div class="mode-header">
+    <div class="container">
+        <h1 class="mode-title">
+            <i class="fas fa-question-circle"></i>
+            Mode 1: Problem to Code
+        </h1>
+        <p class="mode-subtitle">
+            Enter a problem description and get a visual flowchart to guide your coding
+        </p>
+    </div>
+</div>
+
+<div class="mode-content">
+    <div class="container">
+        <div class="workspace">
+            <!-- Problem Input Section -->
+            <div class="panel problem-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-edit"></i> Problem Description</h3>
+                    <div class="panel-actions">
+                        <button id="generate-flowchart-btn" class="btn btn-primary">
+                            <i class="fas fa-project-diagram"></i> Generate Flowchart
+                        </button>
+                        <button id="clear-problem-btn" class="btn btn-secondary">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <textarea 
+                        id="problem-input" 
+                        class="problem-textarea"
+                        placeholder="Describe your programming problem here...
+
+Example:
+Write a program that asks the user for their age and determines if they are eligible to vote (18 or older). Display an appropriate message.
+
+Or:
+
+Create a program that calculates the factorial of a number entered by the user using a loop."
+                    ></textarea>
+                    <div class="input-help">
+                        <p><i class="fas fa-lightbulb"></i> <strong>Tips:</strong></p>
+                        <ul>
+                            <li>Be specific about what your program should do</li>
+                            <li>Mention inputs, processing, and expected outputs</li>
+                            <li>Include any special conditions or requirements</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flowchart Section -->
+            <div class="panel flowchart-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-project-diagram"></i> Solution Flowchart</h3>
+                    <div class="panel-actions">
+                        <button id="zoom-in-btn" class="btn btn-icon" title="Zoom In">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button id="zoom-out-btn" class="btn btn-icon" title="Zoom Out">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <button id="reset-zoom-btn" class="btn btn-icon" title="Reset Zoom">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div id="flowchart-container" class="flowchart-container">
+                        <div class="flowchart-placeholder">
+                            <i class="fas fa-project-diagram"></i>
+                            <p>Enter a problem description and click "Generate Flowchart" to see the solution flow</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Editor Section -->
+            <div class="panel code-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-code"></i> Your Code</h3>
+                    <div class="panel-actions">
+                        <button id="run-code-btn" class="btn btn-success">
+                            <i class="fas fa-play"></i> Run Code
+                        </button>
+                        <button id="clear-code-btn" class="btn btn-secondary">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                        <button id="copy-code-btn" class="btn btn-icon" title="Copy Code">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div id="code-editor" class="code-editor"></div>
+                    <div class="code-help">
+                        <p><i class="fas fa-info-circle"></i> <strong>Instructions:</strong></p>
+                        <ul>
+                            <li>Follow the flowchart to write your Python code</li>
+                            <li>Use proper indentation (4 spaces or 1 tab)</li>
+                            <li>Test your code by clicking "Run Code"</li>
+                            <li>Ask the chatbot if you need help!</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="panel output-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-terminal"></i> Output</h3>
+                    <div class="panel-actions">
+                        <button id="clear-output-btn" class="btn btn-secondary">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div id="output-container" class="output-container">
+                        <div class="output-placeholder">
+                            <i class="fas fa-terminal"></i>
+                            <p>Code output will appear here when you run your program</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sample Problems Modal -->
+<div id="samples-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Sample Problems</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="sample-problems">
+                <div class="sample-problem" data-problem="Write a program that asks the user for their name and age, then displays a personalized greeting message.">
+                    <h4>Basic Input/Output</h4>
+                    <p>Simple program with user input and formatted output</p>
+                </div>
+                <div class="sample-problem" data-problem="Create a program that calculates the area of a rectangle. Ask the user for length and width, then display the result.">
+                    <h4>Mathematical Calculation</h4>
+                    <p>Program involving basic arithmetic operations</p>
+                </div>
+                <div class="sample-problem" data-problem="Write a program that determines if a number entered by the user is even or odd.">
+                    <h4>Conditional Logic</h4>
+                    <p>Program using if-else statements for decision making</p>
+                </div>
+                <div class="sample-problem" data-problem="Create a program that prints the multiplication table for a number entered by the user (from 1 to 10).">
+                    <h4>Loops</h4>
+                    <p>Program using loops for repetitive operations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+    <button id="samples-btn" class="quick-action-btn" title="Sample Problems">
+        <i class="fas fa-lightbulb"></i>
+    </button>
+    <button id="help-btn" class="quick-action-btn" title="Help">
+        <i class="fas fa-question"></i>
+    </button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/mode1.js') }}"></script>
+{% endblock %}

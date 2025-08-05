@@ -1,0 +1,28 @@
+# Flask and Web Framework Dependencies
+Flask==2.3.3
+Flask-CORS==4.0.0
+
+# Code Analysis and AST Processing
+ast-tools==0.1.0
+
+# Security and Sandboxing
+RestrictedPython==6.0
+
+# Development and Testing
+pytest==7.4.2
+pytest-flask==1.2.0
+
+# Optional: For enhanced chatbot functionality
+# openai==0.28.1  # Uncomment if you want to integrate with OpenAI API
+
+# Optional: For database support (if you want to add user sessions)
+# Flask-SQLAlchemy==3.0.5
+# SQLite (built into Python)
+
+# Optional: For enhanced code formatting and analysis
+# black==23.7.0
+# flake8==6.0.0
+# pylint==2.17.5
+
+# Utility libraries
+python-dateutil==2.8.2

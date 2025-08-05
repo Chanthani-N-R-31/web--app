@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+
+{% block title %}Mode 2 - Code Analysis{% endblock %}
+
+{% block content %}
+<div class="mode-header">
+    <div class="container">
+        <h1 class="mode-title">
+            <i class="fas fa-code-branch"></i>
+            Mode 2: Code Analysis
+        </h1>
+        <p class="mode-subtitle">
+            Write or paste Python code to get flowchart visualization and error analysis
+        </p>
+    </div>
+</div>
+
+<div class="mode-content">
+    <div class="container">
+        <div class="workspace">
+            <!-- Code Input Section -->
+            <div class="panel code-input-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-code"></i> Python Code</h3>
+                    <div class="panel-actions">
+                        <button id="analyze-code-btn" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Analyze Code
+                        </button>
+                        <button id="run-code-btn" class="btn btn-success">
+                            <i class="fas fa-play"></i> Run Code
+                        </button>
+                        <button id="clear-code-btn" class="btn btn-secondary">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                        <button id="load-sample-btn" class="btn btn-info">
+                            <i class="fas fa-file-code"></i> Load Sample
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div id="code-editor" class="code-editor"></div>
+                    <div class="code-stats">
+                        <span id="line-count">Lines: 0</span>
+                        <span id="char-count">Characters: 0</span>
+                        <span id="cursor-position">Line 1, Col 1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flowchart Visualization -->
+            <div class="panel flowchart-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-project-diagram"></i> Code Flow Diagram</h3>
+                    <div class="panel-actions">
+                        <button id="zoom-in-btn" class="btn btn-icon" title="Zoom In">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button id="zoom-out-btn" class="btn btn-icon" title="Zoom Out">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <button id="reset-zoom-btn" class="btn btn-icon" title="Reset Zoom">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </button>
+                        <button id="export-flowchart-btn" class="btn btn-icon" title="Export Flowchart">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div id="flowchart-container" class="flowchart-container">
+                        <div class="flowchart-placeholder">
+                            <i class="fas fa-project-diagram"></i>
+                            <p>Write some Python code and click "Analyze Code" to see the flow diagram</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Analysis -->
+            <div class="panel errors-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-bug"></i> Error Analysis</h3>
+                    <div class="panel-actions">
+                        <button id="refresh-analysis-btn" class="btn btn-icon" title="Refresh Analysis">
+                            <i class="fas fa-sync"></i>
+                        </button>
+                        <button id="clear-errors-btn" class="btn btn-secondary">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div id="errors-container" class="errors-container">
+                        <div class="errors-placeholder">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Error analysis will appear here after code analysis</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Output -->
+            <div class="panel output-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-terminal"></i> Execution Output</h3>
+                    <div class="panel-actions">
+                        <button id="clear-output-btn" class="btn btn-secondary">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                        <button id="copy-output-btn" class="btn btn-icon" title="Copy Output">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div id="output-container" class="output-container">
+                        <div class="output-placeholder">
+                            <i class="fas fa-terminal"></i>
+                            <p>Code execution output will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Code Samples Modal -->
+<div id="samples-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Sample Code</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="sample-codes">
+                <div class="sample-code" data-code="# Simple calculator
+def calculator():
+    num1 = float(input('Enter first number: '))
+    operator = input('Enter operator (+, -, *, /): ')
+    num2 = float(input('Enter second number: '))
+    
+    if operator == '+':
+        result = num1 + num2
+    elif operator == '-':
+        result = num1 - num2
+    elif operator == '*':
+        result = num1 * num2
+    elif operator == '/':
+        if num2 != 0:
+            result = num1 / num2
+        else:
+            print('Error: Division by zero!')
+            return
+    else:
+        print('Invalid operator!')
+        return
+    
+    print(f'Result: {num1} {operator} {num2} = {result}')
+
+calculator()">
+                    <h4>Simple Calculator</h4>
+                    <p>Basic calculator with error handling</p>
+                </div>
+                
+                <div class="sample-code" data-code="# Number guessing game
+import random
+
+def guessing_game():
+    number = random.randint(1, 100)
+    attempts = 0
+    max_attempts = 7
+    
+    print('Welcome to the Number Guessing Game!')
+    print('I\'m thinking of a number between 1 and 100.')
+    
+    while attempts < max_attempts:
+        try:
+            guess = int(input(f'Attempt {attempts + 1}/{max_attempts}: Enter your guess: '))
+            attempts += 1
+            
+            if guess == number:
+                print(f'Congratulations! You guessed it in {attempts} attempts!')
+                break
+            elif guess < number:
+                print('Too low!')
+            else:
+                print('Too high!')
+                
+        except ValueError:
+            print('Please enter a valid number!')
+            attempts -= 1
+    
+    if attempts == max_attempts and guess != number:
+        print(f'Game over! The number was {number}.')
+
+guessing_game()">
+                    <h4>Number Guessing Game</h4>
+                    <p>Interactive game with loops and error handling</p>
+                </div>
+                
+                <div class="sample-code" data-code="# Student grade analyzer
+def analyze_grades():
+    grades = []
+    
+    print('Enter student grades (type \'done\' to finish):')
+    while True:
+        grade_input = input('Enter grade: ')
+        
+        if grade_input.lower() == 'done':
+            break
+            
+        try:
+            grade = float(grade_input)
+            if 0 <= grade <= 100:
+                grades.append(grade)
+            else:
+                print('Grade must be between 0 and 100!')
+        except ValueError:
+            print('Please enter a valid number!')
+    
+    if not grades:
+        print('No grades entered!')
+        return
+    
+    # Calculate statistics
+    average = sum(grades) / len(grades)
+    highest = max(grades)
+    lowest = min(grades)
+    
+    # Determine letter grade
+    if average >= 90:
+        letter = 'A'
+    elif average >= 80:
+        letter = 'B'
+    elif average >= 70:
+        letter = 'C'
+    elif average >= 60:
+        letter = 'D'
+    else:
+        letter = 'F'
+    
+    print(f'\\nGrade Analysis:')
+    print(f'Number of grades: {len(grades)}')
+    print(f'Average: {average:.2f} ({letter})')
+    print(f'Highest: {highest}')
+    print(f'Lowest: {lowest}')
+
+analyze_grades()">
+                    <h4>Grade Analyzer</h4>
+                    <p>Data processing with statistics and conditionals</p>
+                </div>
+                
+                <div class="sample-code" data-code="# Fibonacci sequence generator
+def fibonacci_sequence(n):
+    '''Generate Fibonacci sequence up to n terms'''
+    if n <= 0:
+        return []
+    elif n == 1:
+        return [0]
+    elif n == 2:
+        return [0, 1]
+    
+    sequence = [0, 1]
+    for i in range(2, n):
+        next_num = sequence[i-1] + sequence[i-2]
+        sequence.append(next_num)
+    
+    return sequence
+
+def main():
+    try:
+        num_terms = int(input('How many Fibonacci numbers do you want? '))
+        
+        if num_terms <= 0:
+            print('Please enter a positive number!')
+            return
+        
+        fib_sequence = fibonacci_sequence(num_terms)
+        
+        print(f'\\nFirst {num_terms} Fibonacci numbers:')
+        for i, num in enumerate(fib_sequence):
+            print(f'F({i}) = {num}')
+        
+        print(f'\\nSequence: {fib_sequence}')
+        
+    except ValueError:
+        print('Please enter a valid integer!')
+
+main()">
+                    <h4>Fibonacci Generator</h4>
+                    <p>Mathematical sequence with functions and loops</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+    <button id="samples-btn" class="quick-action-btn" title="Sample Code">
+        <i class="fas fa-file-code"></i>
+    </button>
+    <button id="help-btn" class="quick-action-btn" title="Help">
+        <i class="fas fa-question"></i>
+    </button>
+    <button id="debug-tips-btn" class="quick-action-btn" title="Debug Tips">
+        <i class="fas fa-bug"></i>
+    </button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/mode2.js') }}"></script>
+{% endblock %}

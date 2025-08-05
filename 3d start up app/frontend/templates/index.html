@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Interactive Python Learning{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">
+            <i class="fas fa-python"></i>
+            Interactive Python Learning
+        </h1>
+        <p class="hero-subtitle">
+            Master Python programming through visual flowcharts and interactive feedback
+        </p>
+        <div class="hero-features">
+            <div class="feature">
+                <i class="fas fa-project-diagram"></i>
+                <span>Visual Flowcharts</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-play-circle"></i>
+                <span>Code Execution</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-robot"></i>
+                <span>AI Assistant</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modes-section">
+    <div class="container">
+        <h2 class="section-title">Choose Your Learning Mode</h2>
+        <div class="modes-grid">
+            <!-- Mode 1 -->
+            <div class="mode-card">
+                <div class="mode-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h3 class="mode-title">Mode 1: Problem to Code</h3>
+                <p class="mode-description">
+                    Start with a problem description, get a visual flowchart, 
+                    then write code based on the logical flow.
+                </p>
+                <div class="mode-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Problem Analysis</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Flowchart Generation</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Guided Coding</span>
+                    </div>
+                </div>
+                <a href="{{ url_for('mode1') }}" class="mode-btn">
+                    Start Mode 1 <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Mode 2 -->
+            <div class="mode-card">
+                <div class="mode-icon">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <h3 class="mode-title">Mode 2: Code Analysis</h3>
+                <p class="mode-description">
+                    Write or upload Python code, get a flowchart visualization, 
+                    and receive error analysis and debugging help.
+                </p>
+                <div class="mode-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Code Visualization</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Error Detection</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Debug Assistance</span>
+                    </div>
+                </div>
+                <a href="{{ url_for('mode2') }}" class="mode-btn">
+                    Start Mode 2 <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="features-section">
+    <div class="container">
+        <h2 class="section-title">Why Choose PyLearn Interactive?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3>Visual Learning</h3>
+                <p>Understand programming logic through interactive flowcharts that make complex concepts easy to grasp.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Safe Execution</h3>
+                <p>Run your Python code in a secure, sandboxed environment with real-time feedback and error detection.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3>Interactive Help</h3>
+                <p>Get instant assistance from our AI chatbot for coding questions, debugging help, and motivation.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Student-Friendly</h3>
+                <p>Designed specifically for students with clear explanations, examples, and step-by-step guidance.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="getting-started-section">
+    <div class="container">
+        <h2 class="section-title">Getting Started</h2>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Choose a Mode</h3>
+                    <p>Select Mode 1 for problem-solving or Mode 2 for code analysis</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Input Your Content</h3>
+                    <p>Enter a problem description or write/paste your Python code</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Learn Interactively</h3>
+                    <p>Follow the flowchart, write code, and get instant feedback</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Get Help</h3>
+                    <p>Use the AI chatbot for questions, debugging, and motivation</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add some interactive animations
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate feature cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all feature cards
+        document.querySelectorAll('.feature-card, .mode-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    });
+</script>
+{% endblock %}

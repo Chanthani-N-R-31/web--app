@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Python Learning - Redirect</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .steps {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .step {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+        .button {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        .auto-redirect {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+        .warning {
+            background: rgba(231, 76, 60, 0.2);
+            border: 2px solid #e74c3c;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🚀</div>
+        <h1>Interactive Python Learning</h1>
+        
+        <div class="warning">
+            <h3>⚠️ Important Notice</h3>
+            <p>You've opened an HTML file directly, but this app needs to run through a server to work properly!</p>
+        </div>
+        
+        <div class="message">
+            To use the Interactive Python Learning Web App, please follow these steps:
+        </div>
+        
+        <div class="steps">
+            <div class="step">
+                <strong>Step 1:</strong> Double-click <code>Launch_App.bat</code> file
+            </div>
+            <div class="step">
+                <strong>Step 2:</strong> Wait for the server to start
+            </div>
+            <div class="step">
+                <strong>Step 3:</strong> Your browser will automatically open the app
+            </div>
+        </div>
+        
+        <div class="message">
+            <strong>Or manually:</strong>
+            <br>1. Open command prompt in the project folder
+            <br>2. Run: <code>python app_simple.py</code>
+            <br>3. Open: <a href="http://localhost:5000" style="color: #f1c40f;">http://localhost:5000</a>
+        </div>
+        
+        <a href="http://localhost:5000" class="button" id="tryButton">
+            🌐 Try Opening App (if server is running)
+        </a>
+        
+        <div class="auto-redirect">
+            <p>Attempting to redirect to the app in <span id="countdown">5</span> seconds...</p>
+        </div>
+    </div>
+
+    <script>
+        // Countdown and auto-redirect
+        let countdown = 5;
+        const countdownElement = document.getElementById('countdown');
+        const tryButton = document.getElementById('tryButton');
+        
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                // Try to redirect to the Flask app
+                window.location.href = 'http://localhost:5000';
+            }
+        }, 1000);
+        
+        // Test if server is running
+        fetch('http://localhost:5000/api/health')
+            .then(response => {
+                if (response.ok) {
+                    tryButton.style.background = '#27ae60';
+                    tryButton.innerHTML = '✅ Server is Running - Click to Open App';
+                }
+            })
+            .catch(() => {
+                tryButton.style.background = '#e74c3c';
+                tryButton.innerHTML = '❌ Server Not Running - Start the App First';
+                tryButton.onclick = function(e) {
+                    e.preventDefault();
+                    alert('Please start the Flask server first by running:\n\n1. Double-click Launch_App.bat\nOR\n2. Run: python app_simple.py');
+                };
+            });
+    </script>
+</body>
+</html>
